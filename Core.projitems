@@ -10,8 +10,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AutoCompleteBoxBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Automaion\FooTextBoxAutomationPeer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Automaion\FooTextBoxRangeProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\FooTextBoxAutomationPeer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Automation\FooTextBoxRangeProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CacheManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CollectionDebugView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CompleteCollection.cs" />
