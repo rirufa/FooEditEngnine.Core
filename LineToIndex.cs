@@ -255,8 +255,9 @@ namespace FooEditEngine
             {
                 Guid guid = Guid.NewGuid();
                 string path = string.Format("{0}\\footextbox_lti_debug_{1}.log", System.IO.Path.GetTempPath(), guid);
-                Debug.Listeners.Add(new TextWriterTraceListener(path));
-                Debug.AutoFlush = true;
+                //TODO: .NET core3だと使えない
+                //Debug.Listeners.Add(new TextWriterTraceListener(path));
+                //Debug.AutoFlush = true;
             }
 #endif
         }
