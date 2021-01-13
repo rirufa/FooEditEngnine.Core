@@ -681,14 +681,32 @@ namespace FooEditEngine
         {
             IEditorRender render = (IEditorRender)base.render;
 
+            bool result;
+            Point pos;
+
             if (this.PageBound.Width == 0 || this.PageBound.Height == 0)
             {
                 this.SetCaretPostion(this.Padding.Left + render.FoldingWidth, 0);
                 return false;
             }
 
+            (result,pos) = this.AdjustSrc(this.Document.CaretPostion, flow);
+
+            this.SetCaretPostion(pos.X, pos.Y);
+
+            return result;
+        }
+
+        /// <summary>
+        /// テキストポイントが含まれるように表示位置を調整します
+        /// </summary>
+        /// <param name="tp">テキストポイント</param>
+        /// <param name="flow">調整方向</param>
+        /// <returns>調整位置が変わったなら真。変わってないなら偽</returns>
+        public (bool,Point) AdjustSrc(TextPoint tp,AdjustFlow flow)
+        {
             bool result = false;
-            TextPoint tp = this.Document.CaretPostion;
+            Point tpPoint = new Point();
             double x = this.CaretLocation.X;
             double y = this.CaretLocation.Y;
             Point relPoint = this.LayoutLines.GetLayout(tp.row).GetPostionFromIndex(tp.col);
@@ -703,33 +721,6 @@ namespace FooEditEngine
                 if (x >= left && x <= right)    //xは表示領域にないにある
                 {
                     x -= left;
-                }
-                else if (x > right) //xは表示領域の右側にある
-                {
-                    this.Document.Src = new SrcPoint(x - this.render.TextArea.Width + this.ScrollMarginWidth,this.Document.Src.Row,this.Document.Src.OffsetY);
-                    if (this.Document.RightToLeft && this.Document.Src.X > 0)
-                    {
-                        System.Diagnostics.Debug.Assert(x > 0);
-                        this.Document.Src = new SrcPoint(0, this.Document.Src.Row, this.Document.Src.OffsetY);
-                    }
-                    else
-                    {
-                        x = this.render.TextArea.Width - this.ScrollMarginWidth;
-                    }
-                    result = true;
-                }
-                else if (x < left)    //xは表示領域の左側にある
-                {
-                    this.Document.Src = new SrcPoint(x - this.ScrollMarginWidth, this.Document.Src.Row, this.Document.Src.OffsetY);
-                    if (!this.Document.RightToLeft && this.Document.Src.X < this.render.TextArea.X)
-                    {
-                        this.Document.Src = new SrcPoint(0, this.Document.Src.Row, this.Document.Src.OffsetY);
-                    }
-                    else
-                    {
-                        x = this.ScrollMarginWidth;
-                    }
-                    result = true;
                 }
                 x += this.render.TextArea.X;
             }
@@ -765,10 +756,10 @@ namespace FooEditEngine
                 {
                     y = caret_y;
                 }
-                else if(caret_y >= alignedHeight)
+                else if (caret_y >= alignedHeight)
                 {
                     var newsrc = this.GetNearstRowAndOffsetY(tp.row, -(alignedHeight - relPoint.Y));
-                    if(newsrc == null)
+                    if (newsrc == null)
                         this.Document.Src = new SrcPoint(this.Src.X, tp.row, 0);
                     else
                         this.Document.Src = new SrcPoint(this.Src.X, newsrc.Item1, -newsrc.Item2);
@@ -778,14 +769,15 @@ namespace FooEditEngine
                 result = true;
             }
 
-            this.SetCaretPostion(x, y);
-
             if (result)
             {
                 this.OnSrcChanged(null);
             }
 
-            return result;
+            tpPoint.X = x;
+            tpPoint.Y = y;
+
+            return (result,tpPoint);
         }
 
         /// <summary>
@@ -840,22 +832,17 @@ namespace FooEditEngine
             this.Scroll(0, row);
             if (alignTop)
                 return;
-            double y = this.render.TextArea.Height;
-            for (int i = row; i >= 0; i--)
-            {
-                int lineHeadIndex = this.LayoutLines.GetIndexFromLineNumber(i);
-                int lineLength = this.LayoutLines.GetLengthFromLineNumber(i);
-                double height = this.LayoutLines.GetLayout(i).Height;
-                if (y - height <= 0)
-                {
-                    this.Scroll(0, i);
-                }
-                if (this.LayoutLines.FoldingCollection.IsHidden(lineHeadIndex))
-                    continue;
-                y -= height;
-            }
+            bool result;
+            Point pos;
+            (result, pos) = this.AdjustSrc(new TextPoint(row, 0), AdjustFlow.Both);
         }
 
+        /// <summary>
+        /// 折り畳みを考慮して行を調整します
+        /// </summary>
+        /// <param name="row">調整前の行</param>
+        /// <param name="isMoveNext">移動方向</param>
+        /// <returns>調整後の行</returns>
         public int AdjustRow(int row, bool isMoveNext)
         {
             if (this.LayoutLines.FoldingStrategy == null)
