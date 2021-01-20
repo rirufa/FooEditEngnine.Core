@@ -522,7 +522,7 @@ namespace FooEditEngine
             p.Y -= this.render.TextArea.Y;
 
             //p.Y に最も近い行を調べる
-            var t = this.GetNearstRowAndOffsetY(this.Src.Row, p.Y - this.Src.OffsetY);
+            var t = this.GetNearstRowAndOffsetY(this.Src.Row, searchRange == TextPointSearchRange.TextAreaOnly ? p.Y - this.Src.OffsetY : p.Y);
             double relX = 0, relY;
             if (t == null)
             {
