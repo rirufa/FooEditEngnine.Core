@@ -368,7 +368,7 @@ namespace FooEditEngine
                 }
                 return new Tuple<int, double>(0, 0);
             }
-            return null;
+            return new Tuple<int, double>(srcRow,0);
         }
 
         public void Dispose()
