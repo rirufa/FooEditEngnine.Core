@@ -572,6 +572,7 @@ namespace FooEditEngine
         public Point GetPostionFromTextPoint(TextPoint tp)
         {
             Point p = new Point();
+            //表示上のずれを考慮せずキャレット位置を求める
             for (int i = this.Src.Row; i < tp.row; i++)
             {
                 int lineHeadIndex = this.LayoutLines.GetIndexFromLineNumber(i);
@@ -582,7 +583,7 @@ namespace FooEditEngine
             }
             Point relP = this.LayoutLines.GetLayout(tp.row).GetPostionFromIndex(tp.col);
             p.X += relP.X - Src.X + this.render.TextArea.X;
-            p.Y += this.render.TextArea.Y + relP.Y;
+            p.Y += this.render.TextArea.Y + relP.Y + this.Src.OffsetY;  //実際に返す値は表示上のずれを考慮しないといけない
             return p;
         }
 
@@ -611,9 +612,9 @@ namespace FooEditEngine
             double radius = width / 2;
             Point point = this.GetPostionFromTextPoint(tp);
             double lineHeight = this.render.emSize.Height;
-            double srcOffsetY = this.Src.OffsetY; //画面上ではずれているので引く必要がある
 
-            Rectangle rect =  new Rectangle(point.X - radius, point.Y + lineHeight - srcOffsetY, width, height);
+
+            Rectangle rect =  new Rectangle(point.X - radius, point.Y + lineHeight, width, height);
 
             if (rect.BottomLeft.Y >= this.render.TextArea.BottomLeft.Y ||
                 rect.BottomRight.X < this.render.TextArea.BottomLeft.X ||
