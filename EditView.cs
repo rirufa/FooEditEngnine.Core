@@ -521,8 +521,8 @@ namespace FooEditEngine
             //表示領域から探索を始めるのでパディングの分だけ引く
             p.Y -= this.render.TextArea.Y;
 
-            //p.Y に最も近い行を調べる
-            var t = this.GetNearstRowAndOffsetY(this.Src.Row, searchRange == TextPointSearchRange.TextAreaOnly ? p.Y - this.Src.OffsetY : p.Y);
+            //p.Y に最も近い行を調べる(OffsetY分引かれてるので、その分足す)
+            var t = this.GetNearstRowAndOffsetY(this.Src.Row, p.Y - this.Src.OffsetY);
             double relX = 0, relY;
             if (t == null)
             {
