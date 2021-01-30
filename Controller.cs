@@ -456,10 +456,9 @@ namespace FooEditEngine
                 this.View.JumpCaret(tp.row, tp.col);
                 this.View.AdjustCaretAndSrc();
                 this.SelectWithMoveCaret(isSelected);
+                this.Document.SelectGrippers.BottomLeft.MoveByIndex(this.View, this.SelectionStart);
+                this.Document.SelectGrippers.BottomRight.MoveByIndex(this.View, this.SelectionStart + this.SelectionLength);
             }
-
-            this.Document.SelectGrippers.BottomLeft.MoveByIndex(this.View, this.SelectionStart);
-            this.Document.SelectGrippers.BottomRight.MoveByIndex(this.View, this.SelectionStart + this.SelectionLength);
         }
 
         /// <summary>
