@@ -56,12 +56,20 @@ namespace FooEditEngine
 
         public static void GetStringExtent(Document document,EditView view,int i_startIndex,int i_endIndex,out Point startPos,out Point endPos)
         {
-            var endIndex = i_endIndex < 0 ? document.Length - 1 : i_endIndex;
-            TextPoint endTextPoint;
+            if(i_startIndex == i_endIndex)
+            {
+                startPos = view.CaretLocation;
+                endPos = view.CaretLocation;
+            }
+            else
+            {
+                var endIndex = i_endIndex < 0 ? document.Length - 1 : i_endIndex;
+                TextPoint endTextPoint;
 
-            startPos = view.GetPostionFromTextPoint(view.LayoutLines.GetTextPointFromIndex(i_startIndex));
-            endTextPoint = view.GetLayoutLineFromIndex(endIndex);
-            endPos = view.GetPostionFromTextPoint(endTextPoint);
+                startPos = view.GetPostionFromTextPoint(view.LayoutLines.GetTextPointFromIndex(i_startIndex));
+                endTextPoint = view.GetLayoutLineFromIndex(endIndex);
+                endPos = view.GetPostionFromTextPoint(endTextPoint);
+            }
             //アンダーラインを描くことがあるので少しずらす
             endPos.Y += view.render.emSize.Height + 5;
         }
