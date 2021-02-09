@@ -470,7 +470,7 @@ namespace FooEditEngine
 
         public void DrawLineMarker(int row)
         {
-            if (this.HideLineMarker || !this.IsFocused)
+            if (this.HideLineMarker)
                 return;
             IEditorRender render = (IEditorRender)base.render;
             Point p = this.CaretLocation;
