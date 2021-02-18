@@ -1116,8 +1116,6 @@ namespace FooEditEngine
         public void Clear()
         {
             this.buffer.Clear();
-            System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-            GC.Collect();
             this.Dirty = false;
         }
 
