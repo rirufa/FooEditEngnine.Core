@@ -344,6 +344,8 @@ namespace FooEditEngine
 
                     rect_hight -= layoutHeight;
                 }
+                if (rect_hight >= 0)
+                    return new Tuple<int, double>(this.Document.LayoutLines.Count - 1, rect_hight);
             }
             else if(rect_hight < 0)
             {

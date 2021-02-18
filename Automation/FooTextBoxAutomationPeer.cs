@@ -214,7 +214,10 @@ namespace FooEditEngine
             Point pt = Util.GetClientPoint(screenLocation, fooTextBox);
             EditView view = this.fooTextBox.View;
 
-            int index = view.GetIndexFromLayoutLine(view.GetTextPointFromPostion(pt));
+            TextPoint tp = view.GetTextPointFromPostion(pt);
+            if (tp == TextPoint.Null)
+                tp = new TextPoint(view.Src.Row,0);
+            int index = view.GetIndexFromLayoutLine(tp);
             int length = 1;
             if (index == this.fooTextBox.Document.Length)
                 length = 0;

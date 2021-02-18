@@ -531,15 +531,9 @@ namespace FooEditEngine
                     tp.row = this.LayoutLines.Count - 1;
                     relY = this.LayoutLines.GetLayout(tp.row).Height - this.render.emSize.Height;
                 }
-                else if(p.Y == 0)
-                {
-                    tp.row = this.Src.Row;
-                    relY = 0;
-                }
                 else
                 {
-                    tp.row = 0;
-                    relY = 0;
+                    return TextPoint.Null;
                 }
             }
             else

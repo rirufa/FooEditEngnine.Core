@@ -453,6 +453,8 @@ namespace FooEditEngine
             {
                 //カーソルを適切な位置に移動させる必要がある
                 TextPoint tp = this.View.GetTextPointFromPostion(this.View.CaretLocation);
+                if (tp == TextPoint.Null)
+                    tp = new TextPoint(this.View.Src.Row, 0);
                 this.View.JumpCaret(tp.row, tp.col);
                 this.View.AdjustCaretAndSrc();
                 this.SelectWithMoveCaret(isSelected);
@@ -921,6 +923,8 @@ namespace FooEditEngine
                 //この値を足さないとうまく動作しない
                 pos.Y += this.View.render.emSize.Height / 2;   
                 var new_tp = this.View.GetTextPointFromPostion(pos,TextPointSearchRange.Full);
+                if (new_tp == TextPoint.Null)
+                    return current;
                 return new_tp;
 
             }
