@@ -207,7 +207,7 @@ namespace FooEditEngine
         public void GetBreakConditions(out DW.BreakCondition breakConditionBefore, out DW.BreakCondition breakConditionAfter)
         {
             breakConditionAfter = DW.BreakCondition.CanBreak;
-            breakConditionBefore = DW.BreakCondition.CanBreak;
+            breakConditionBefore = DW.BreakCondition.MayNotBreak;
         }
 
         public IDisposable Shadow

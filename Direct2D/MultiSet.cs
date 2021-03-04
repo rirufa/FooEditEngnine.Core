@@ -27,12 +27,13 @@ namespace FooEditEngine
         double _TabWidth;
         const int DuplicateCount = 2;   //1だとDirectWriteが一つにまとめてしまう
 
-        public InlineManager(DW.Factory factory, DW.TextFormat format, Color4 fore, ColorBrushCollection brushes)
+        public InlineManager(DW.Factory factory, DW.TextFormat format, Color4 fore, ColorBrushCollection brushes, Size emSize)
         {
             this.Factory = factory;
             this._Format = format;
             this._Fore = fore;
             this.Brushes = brushes;
+            this.emSize = emSize;
         }
 
         public bool ContainsSymbol(char c)
@@ -76,6 +77,12 @@ namespace FooEditEngine
                 this._Fore = value;
                 this.Format = this._Format;
             }
+        }
+
+        public Size emSize
+        {
+            get;
+            set;
         }
 
         public DW.TextFormat Format
@@ -122,12 +129,13 @@ namespace FooEditEngine
                     width = this._TabWidth;
                 else
                     width = this._TabWidth - x % this._TabWidth;
+
                 List<InlineTab> collection;
                 if (!this.InlineTabs.TryGet(width, out collection))
                 {
                     collection = new List<InlineTab>();
                     for (int i = 0; i < DuplicateCount; i++)
-                        collection.Add(new InlineTab(this.Brushes, this.Fore, width, layout.Height));
+                        collection.Add(new InlineTab(this.Brushes, this.Fore, width, this.emSize.Height));
                     this.InlineTabs.Add(width, collection);
                 }
                 return collection[index % DuplicateCount];

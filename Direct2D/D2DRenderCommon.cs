@@ -249,19 +249,22 @@ namespace FooEditEngine
             this.format.WordWrapping = DW.WordWrapping.NoWrap;
             this.format.ReadingDirection = GetDWRightDirect(_RightToLeft);
 
-            if (this.HiddenChars == null)
-                this.HiddenChars = new InlineManager(D2DRenderShared.DWFactory, this.format, this.ControlChar, this.Brushes);
-            else
-                this.HiddenChars.Format = this.format;
-
-            this.TabWidthChar = this.TabWidthChar;
-
-            this.hasCache = false;
-
             MyTextLayout layout = new MyTextLayout(D2DRenderShared.DWFactory, "0", this.format, float.MaxValue, float.MaxValue, dpix, false);
             layout.RightToLeft = false;
             this.emSize = new Size(layout.Width, layout.Height);
             layout.Dispose();
+
+            if (this.HiddenChars == null)
+                this.HiddenChars = new InlineManager(D2DRenderShared.DWFactory, this.format, this.ControlChar, this.Brushes, this.emSize);
+            else
+            {
+                this.HiddenChars.Format = this.format;
+                this.HiddenChars.emSize = this.emSize;
+            }
+
+            this.TabWidthChar = this.TabWidthChar;
+
+            this.hasCache = false;
 
             layout = new MyTextLayout(D2DRenderShared.DWFactory, "+", this.format, float.MaxValue, float.MaxValue, dpix, false);
             layout.RightToLeft = false;
