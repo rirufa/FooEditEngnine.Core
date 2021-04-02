@@ -306,11 +306,13 @@ namespace FooEditEngine
         public virtual bool TryScroll(double offset_x,double offset_y)
         {
             double x = this.Document.Src.X - offset_x;
-            if (x < 0)
+            if (offset_x < 0 && x < 0)
+                return true;
+            if (offset_y < 0 && this.Document.Src.Row == 0)
+                return true;
+            if (offset_y > 0 && this.Document.Src.Row == this.Document.LayoutLines.Count - 1)
                 return true;
             var t = GetNearstRowAndOffsetY(this.Document.Src.Row, -this.Document.Src.OffsetY + offset_y);
-            if (t == null)
-                return true;
             this.Document.Src = new SrcPoint(x, t.Item1, -t.Item2);
             return false;
         }
@@ -344,7 +346,7 @@ namespace FooEditEngine
 
                     rect_hight -= layoutHeight;
                 }
-                if (rect_hight >= 0)
+                if(rect_hight >= 0)
                     return new Tuple<int, double>(this.Document.LayoutLines.Count - 1, rect_hight);
             }
             else if(rect_hight < 0)
