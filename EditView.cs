@@ -717,6 +717,33 @@ namespace FooEditEngine
                 {
                     x -= left;
                 }
+                else if (x > right) //xは表示領域の右側にある
+                {
+                    this.Document.Src = new SrcPoint(x - this.render.TextArea.Width + this.ScrollMarginWidth, this.Document.Src.Row, this.Document.Src.OffsetY);
+                    if (this.Document.RightToLeft && this.Document.Src.X > 0)
+                    {
+                        System.Diagnostics.Debug.Assert(x > 0);
+                        this.Document.Src = new SrcPoint(0, this.Document.Src.Row, this.Document.Src.OffsetY);
+                    }
+                    else
+                    {
+                        x = this.render.TextArea.Width - this.ScrollMarginWidth;
+                    }
+                    result = true;
+                }
+                else if (x < left)    //xは表示領域の左側にある
+                {
+                    this.Document.Src = new SrcPoint(x - this.ScrollMarginWidth, this.Document.Src.Row, this.Document.Src.OffsetY);
+                    if (!this.Document.RightToLeft && this.Document.Src.X < this.render.TextArea.X)
+                    {
+                        this.Document.Src = new SrcPoint(0, this.Document.Src.Row, this.Document.Src.OffsetY);
+                    }
+                    else
+                    {
+                        x = this.ScrollMarginWidth;
+                    }
+                    result = true;
+                }
                 x += this.render.TextArea.X;
             }
 
